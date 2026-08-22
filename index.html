@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Spielplan 2026/27</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --ink: #1b212c;
+      --muted: #7c8392;
+      --paper: #faf7ef;
+      --paper-deep: #efe7d4;
+      --surface: #ffffff;
+      --surface-soft: rgba(255, 255, 255, 0.82);
+      --line: #e8e0cb;
+      --shadow: 0 10px 26px rgba(27, 33, 44, 0.06);
+      --shadow-hover: 0 20px 42px rgba(27, 33, 44, 0.14);
+      --accent: #0b6e8c;
+
+      --u13: #e2543f;
+      --u14: #9c3b40;
+      --u16: #1086c4;
+      --u18: #6b3382;
+      --vl12: #bb8a1e;
+      --vld: #bb8a1e;
+      --vlh: #24874e;
+      --mjd: #d46a1f;
+      --lkdo: #0b6e8c;
+      --lkp: #0b6e8c;
+      --quali: #0b6e8c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 14% -8%, rgba(11, 110, 140, 0.12), transparent 38rem),
+        radial-gradient(circle at 100% 0%, rgba(187, 138, 30, 0.08), transparent 30rem),
+        linear-gradient(180deg, #ffffff 0%, var(--paper) 36%, var(--paper-deep) 100%);
+      color: var(--ink);
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, Helvetica, sans-serif;
+      font-weight: 500;
+    }
+
+    header { display: none; }
+
+    .header-content {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      width: 100%;
+    }
+
+    .header-slot.start { justify-self: start; }
+    .header-slot.center { justify-self: center; }
+    .header-slot.end { justify-self: end; }
+    .app-title { font-weight: 700; }
+
+    .page {
+      width: min(100%, 720px);
+      margin: 0 auto;
+      padding: 40px 18px 64px;
+    }
+
+    .hero {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      margin: -40px -18px 26px;
+      padding: 40px 18px 20px;
+      background: rgba(250, 247, 239, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(232, 224, 203, 0.8);
+    }
+
+    .hero-inner {
+      width: min(100%, 684px);
+      margin: 0 auto;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Oswald", sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: clamp(26px, 5vw, 40px);
+      line-height: 0.98;
+      letter-spacing: 0.005em;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--accent);
+      font-size: 12px;
+      line-height: 1.1;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 7px;
+      max-width: 390px;
+    }
+
+    .filter {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 30px;
+      padding: 0 12px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .filter:hover { border-color: rgba(11, 110, 140, 0.35); }
+
+    .filter input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switch {
+      position: relative;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #cdd3dd;
+      box-shadow: inset 0 0 0 2px #fff;
+      transition: background 160ms ease, box-shadow 160ms ease;
+    }
+
+    .filter input:checked + .switch.u13 { background: var(--u13); box-shadow: 0 0 0 3px rgba(226, 84, 63, 0.18); }
+    .filter input:checked + .switch.u14 { background: var(--u14); box-shadow: 0 0 0 3px rgba(156, 59, 64, 0.18); }
+    .filter input:checked + .switch.u16 { background: var(--u16); box-shadow: 0 0 0 3px rgba(16, 134, 196, 0.18); }
+    .filter input:checked + .switch.u18 { background: var(--u18); box-shadow: 0 0 0 3px rgba(107, 51, 130, 0.18); }
+    .filter input:checked + .switch.vld { background: var(--vld); box-shadow: 0 0 0 3px rgba(187, 138, 30, 0.18); }
+    .filter input:checked + .switch.vlh { background: var(--vlh); box-shadow: 0 0 0 3px rgba(36, 135, 78, 0.18); }
+    .filter input:checked + .switch.mjd { background: var(--mjd); box-shadow: 0 0 0 3px rgba(212, 106, 31, 0.18); }
+    .filter input:checked + .switch.lkdo,
+    .filter input:checked + .switch.lkp,
+    .filter input:checked + .switch.quali { background: var(--lkdo); box-shadow: 0 0 0 3px rgba(11, 110, 140, 0.18); }
+
+    .filter-text {
+      color: #384151;
+      font-size: 13px;
+      line-height: 1;
+      letter-spacing: -0.1px;
+      font-weight: 650;
+    }
+
+    .filter.is-off { opacity: 0.5; }
+    .filter:focus-within { outline: 2px solid rgba(11, 110, 140, 0.3); outline-offset: 2px; }
+
+    .schedule {
+      position: relative;
+      display: grid;
+      gap: 11px;
+      margin-top: 16px;
+    }
+
+    .month {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin: 26px 0 4px;
+      color: var(--accent);
+      font-family: "Oswald", sans-serif;
+      font-size: 13px;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .month::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .month::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--line);
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      align-items: stretch;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(11, 110, 140, 0.28);
+    }
+
+    .date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--ink);
+      color: #f3f1ea;
+      position: relative;
+      padding: 14px 8px 17px;
+      font-family: "Oswald", sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.18;
+      letter-spacing: 0.01em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .date::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: var(--muted);
+    }
+
+    .item[data-group="u13"] .date::after { background: var(--u13); }
+    .item[data-group="u14"] .date::after { background: var(--u14); }
+    .item[data-group="u16"] .date::after { background: var(--u16); }
+    .item[data-group="u18"] .date::after { background: var(--u18); }
+    .item[data-group="vld"] .date::after { background: var(--vld); }
+    .item[data-group="vlh"] .date::after { background: var(--vlh); }
+    .item[data-group="mjd"] .date::after { background: var(--mjd); }
+    .item[data-group="lkdo"] .date::after,
+    .item[data-group="lkp"] .date::after,
+    .item[data-group="quali"] .date::after { background: var(--lkdo); }
+
+    .content {
+      min-width: 0;
+      padding: 14px 16px 14px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .headline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 26px;
+    }
+
+    .title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: "Oswald", sans-serif;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 1.05;
+      letter-spacing: -0.2px;
+      color: var(--ink);
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.25;
+      letter-spacing: -0.1px;
+      font-weight: 500;
+    }
+
+    .chip {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      min-width: 54px;
+      height: 23px;
+      padding: 0 11px;
+      border-radius: 7px;
+      color: #fff;
+      font-family: "Oswald", sans-serif;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+    }
+
+    .chip.u13 { background: var(--u13); }
+    .chip.u14 { background: var(--u14); }
+    .chip.u16 { background: var(--u16); }
+    .chip.u18 { background: var(--u18); }
+    .chip.lkdo,
+    .chip.lkp,
+    .chip.quali { background: var(--lkdo); }
+    .chip.vld { background: var(--vld); }
+    .chip.vlh { background: var(--vlh); }
+    .chip.mjd { background: var(--mjd); }
+
+    .meta .location {
+      color: var(--ink);
+      font-weight: 650;
+      display: block;
+    }
+
+    .meta .team-flow,
+    .meta .scn-flow {
+      display: block;
+      margin-top: 3px;
+      font-size: 13px;
+      line-height: 1.25;
+      letter-spacing: -0.1px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .meta .team-note {
+      display: block;
+      margin-top: 3px;
+      color: var(--accent);
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: -0.1px;
+      font-weight: 650;
+    }
+
+    .item[hidden],
+    .month[hidden] { display: none; }
+
+
+    .view-toggle {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-soft);
+      margin-top: 12px;
+    }
+
+    .view-button {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: transparent;
+      color: #384151;
+      font: inherit;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .view-button.is-active {
+      background: var(--ink);
+      color: #f3f1ea;
+    }
+
+    .view[hidden] {
+      display: none;
+    }
+
+    .overview {
+      display: grid;
+      gap: 11px;
+      margin-top: 16px;
+    }
+
+    .overview-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .overview-date {
+      background: var(--ink);
+      color: #f3f1ea;
+      font-family: "Oswald", sans-serif;
+      font-size: 16px;
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      padding: 10px 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .overview-content {
+      display: grid;
+      gap: 0;
+    }
+
+    .overview-block {
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      gap: 12px;
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .overview-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 23px;
+      border-radius: 7px;
+      color: #fff;
+      font-family: "Oswald", sans-serif;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+    }
+
+    .overview-block[data-group="vld"] .overview-badge { background: var(--vld); }
+    .overview-block[data-group="vlh"] .overview-badge { background: var(--vlh); }
+    .overview-block[data-group="lkdo"] .overview-badge { background: var(--lkdo); }
+    .overview-block[data-group="mjd"] .overview-badge { background: var(--mjd); }
+    .overview-block[data-group="u13"] .overview-badge { background: var(--u13); }
+    .overview-block[data-group="u14"] .overview-badge { background: var(--u14); }
+    .overview-block[data-group="u16"] .overview-badge { background: var(--u16); }
+    .overview-block[data-group="u18"] .overview-badge { background: var(--u18); }
+
+    .overview-title {
+      font-family: "Oswald", sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+
+    .overview-meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    .overview-meta .location {
+      display: block;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .overview-meta .team-flow,
+    .overview-meta .scn-flow,
+    .overview-meta .plain-flow {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .overview-meta .team-note {
+      display: block;
+      margin-top: 3px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    @media (max-width: 620px) {
+      .view-toggle { margin-top: 10px; }
+      .overview-date { font-size: 14px; padding: 9px 12px; }
+      .overview-block { grid-template-columns: 52px 1fr; gap: 10px; padding: 11px 12px; }
+      .overview-badge { width: 48px; height: 21px; font-size: 12px; }
+      .overview-title { font-size: 16px; }
+      .overview-meta { font-size: 13px; }
+    }
+
+
+    /* Übersicht: seriöse Planungsansicht */
+    .overview {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .overview-card {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(27, 33, 44, 0.045);
+      overflow: hidden;
+    }
+
+    .overview-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 13px;
+      background: rgba(27, 33, 44, 0.035);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .overview-date {
+      color: var(--ink);
+      font-family: "Oswald", sans-serif;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+      background: transparent;
+      padding: 0;
+    }
+
+    .overview-count {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .overview-content {
+      display: grid;
+    }
+
+    .overview-block {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      padding: 10px 13px;
+      border-top: 1px solid rgba(232, 224, 203, 0.7);
+    }
+
+    .overview-block:first-child {
+      border-top: 0;
+    }
+
+    .overview-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 22px;
+      border-radius: 6px;
+      color: #fff;
+      font-family: "Oswald", sans-serif;
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: none;
+    }
+
+    .overview-block[data-group="vld"] .overview-badge { background: var(--vld); }
+    .overview-block[data-group="vlh"] .overview-badge { background: var(--vlh); }
+    .overview-block[data-group="lkdo"] .overview-badge { background: var(--lkdo); }
+    .overview-block[data-group="mjd"] .overview-badge { background: var(--mjd); }
+    .overview-block[data-group="u13"] .overview-badge { background: var(--u13); }
+    .overview-block[data-group="u14"] .overview-badge { background: var(--u14); }
+    .overview-block[data-group="u16"] .overview-badge { background: var(--u16); }
+    .overview-block[data-group="u18"] .overview-badge { background: var(--u18); }
+
+    .overview-title {
+      margin: 0 0 3px;
+      color: var(--ink);
+      font-family: "Oswald", sans-serif;
+      font-size: 16px;
+      line-height: 1.05;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .overview-meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.25;
+      font-weight: 500;
+    }
+
+    .overview-meta .location {
+      display: block;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .overview-meta .team-flow,
+    .overview-meta .scn-flow,
+    .overview-meta .plain-flow {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .overview-meta .team-note {
+      display: block;
+      margin-top: 3px;
+      color: var(--accent);
+      font-size: 12px;
+      line-height: 1.25;
+      font-weight: 650;
+    }
+
+    @media (max-width: 620px) {
+      .overview { gap: 8px; }
+      .overview-card { border-radius: 13px; }
+      .overview-head { padding: 9px 11px; }
+      .overview-date { font-size: 14px; }
+      .overview-count { font-size: 11px; }
+      .overview-block { grid-template-columns: 44px 1fr; gap: 10px; padding: 10px 11px; }
+      .overview-badge { width: 40px; height: 21px; font-size: 11px; }
+      .overview-title { font-size: 15px; }
+      .overview-meta { font-size: 12.5px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .item, .filter, .switch { transition: none !important; }
+    }
+
+    @media (max-width: 620px) {
+      .page { padding: 30px 12px 48px; }
+      .hero { margin: -30px -12px 18px; padding: 30px 12px 16px; }
+      .hero-inner { align-items: start; flex-direction: column; gap: 14px; }
+      .filters { justify-content: flex-start; max-width: none; }
+      .item { grid-template-columns: 88px 1fr; border-radius: 16px; }
+      .date { font-size: 13px; padding: 12px 5px 15px; }
+      .content { padding: 12px 12px 12px 14px; }
+      .title { font-size: 16px; }
+      .meta { font-size: 13px; }
+      .chip { min-width: 48px; height: 21px; padding: 0 9px; font-size: 12px; }
+    }
+  
+
+    /* Aktueller Plan: robustere Handy- und Druckdarstellung */
+    .title {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.12;
+    }
+
+    .headline {
+      align-items: flex-start;
+    }
+
+    @media (max-width: 620px) {
+      .date {
+        font-size: 12px;
+        letter-spacing: -0.2px;
+      }
+    }
+
+    @media print {
+      @page { size: A4 portrait; margin: 10mm; }
+      body { background: #fff !important; }
+      .page { width: 100%; padding: 0; }
+      .hero {
+        position: static;
+        margin: 0 0 12px;
+        padding: 0 0 12px;
+        background: #fff !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+      .view-toggle, .filters { display: none !important; }
+      .item {
+        box-shadow: none;
+        break-inside: avoid;
+        border-radius: 10px;
+        grid-template-columns: 86px 1fr;
+      }
+      .month {
+        margin-top: 14px;
+        break-after: avoid;
+      }
+      .date { font-size: 12px; padding: 8px 4px 10px; }
+      .content { padding: 9px 11px; }
+      .title { font-size: 15px; }
+      .meta, .meta .team-flow, .meta .scn-flow { font-size: 11px; }
+      .chip { min-width: 42px; height: 19px; font-size: 11px; }
+      .overview-view { display: none !important; }
+    }
+
+
+    /* Ergänzung: U20 + korrekte mJD-Benennung */
+    :root {
+      --u20: #b54875;
+      --djm: #d46a1f;
+    }
+
+    .filter input:checked + .switch.u20 { background: var(--u20); box-shadow: 0 0 0 3px rgba(181, 72, 117, 0.18); }
+    .filter input:checked + .switch.djm { background: var(--djm); box-shadow: 0 0 0 3px rgba(212, 106, 31, 0.18); }
+
+    .item[data-group="u20"] .date::after { background: var(--u20); }
+    .item[data-group="djm"] .date::after { background: var(--djm); }
+
+    .chip.u20 { background: var(--u20); }
+    .chip.djm { background: var(--djm); }
+
+    .overview-block[data-group="u20"] .overview-badge { background: var(--u20); }
+    .overview-block[data-group="djm"] .overview-badge { background: var(--djm); }
+</style>
+</head>
+<body>
+<header>
+<div class="header-content">
+<div class="header-slot start">
+<span class="app-title">profil Pilotsystem</span>
+</div>
+<div class="header-slot center"></div>
+<div class="header-slot end"></div>
+</div>
+</header>
+<main class="page">
+<section aria-label="Kopfbereich" class="hero">
+<div class="hero-inner">
+<div>
+<h1>Spielplan 2026/27</h1>
+<p class="subtitle">Stand 09.08.2026</p>
+<div aria-label="Ansicht" class="view-toggle"><button class="view-button is-active" data-view-target="list" type="button">Liste</button><button class="view-button" data-view-target="overview" type="button">Übersicht</button></div></div>
+<div aria-label="Filter" class="filters"><label class="filter"><input checked="" data-filter="u13" type="checkbox"/><span class="switch u13"></span><span class="filter-text">U13</span></label>
+<label class="filter"><input checked="" data-filter="u14" type="checkbox"/><span class="switch u14"></span><span class="filter-text">U14</span></label>
+<label class="filter"><input checked="" data-filter="u16" type="checkbox"/><span class="switch u16"></span><span class="filter-text">U16</span></label>
+<label class="filter"><input checked="" data-filter="u18" type="checkbox"/><span class="switch u18"></span><span class="filter-text">U18</span></label>
+<label class="filter"><input checked="" data-filter="u20" type="checkbox"/><span class="switch u20"></span><span class="filter-text">U20</span></label>
+<label class="filter"><input checked="" data-filter="vld" type="checkbox"/><span class="switch vld"></span><span class="filter-text">VLD</span></label>
+<label class="filter"><input checked="" data-filter="vlh" type="checkbox"/><span class="switch vlh"></span><span class="filter-text">VLH</span></label>
+<label class="filter"><input checked="" data-filter="djm" type="checkbox"/><span class="switch djm"></span><span class="filter-text">mJD</span></label>
+<label class="filter"><input checked="" data-filter="lkdo" type="checkbox"/><span class="switch lkdo"></span><span class="filter-text">LKDO</span></label>
+</div>
+</div>
+</section>
+<section aria-label="Spielplan 2026/27" class="schedule view list-view" data-view="list"><div class="month" data-month="08">August 2026</div>
+<article class="item" data-group="djm"><div class="date">29/30.08.26</div><div class="content"><div class="headline"><span class="title">TigerCup</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">DD</span></div></div></article>
+<div class="month" data-month="09">September 2026</div>
+<article class="item" data-group="u13"><div class="date">05.09.26</div><div class="content"><div class="headline"><span class="title">LM 1</span><span class="chip u13">U13</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u20"><div class="date">05.09.26</div><div class="content"><div class="headline"><span class="title">LM 1</span><span class="chip u20">U20</span></div><div class="meta"><span class="location">Malchin</span></div></div></article>
+<article class="item" data-group="u16"><div class="date">06.09.26</div><div class="content"><div class="headline"><span class="title">LM 1</span><span class="chip u16">U16</span></div><div class="meta"><span class="location">NB</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">12.09.26</div><div class="content"><div class="headline"><span class="title">Quali Landesklassepokal</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">HRO</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">12.09.26</div><div class="content"><div class="headline"><span class="title">HSV 90 Waren</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">JSG NB-AT II – HSV 90 Waren</span></div></div></article>
+<article class="item" data-group="vld"><div class="date">19.09.26</div><div class="content"><div class="headline"><span class="title">Spieltag 1</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Neubrandenburg, Albert-Einstein-Gymnasium</span>
+<span class="team-flow">(2) HSV Neubrandenburg · (3) MSV Pampow 2</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">19.09.26</div><div class="content"><div class="headline"><span class="title">Spieltag 1</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">SV Warnemünde 4</span>
+<span class="team-flow">SV Warnemünde 4 · HSG Uni Rostock 1</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">26.09.26</div><div class="content"><div class="headline"><span class="title">JSG NB-AT III</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">JSG NB-AT III – JSG NB-AT II</span></div></div></article>
+<article class="item" data-group="u14"><div class="date">26.09.26</div><div class="content"><div class="headline"><span class="title">LM 1</span><span class="chip u14">U14</span></div><div class="meta"><span class="location">Ferdinandshof</span></div></div></article>
+<article class="item" data-group="u18"><div class="date">26.09.26</div><div class="content"><div class="headline"><span class="title">LM 1</span><span class="chip u18">U18</span></div><div class="meta"><span class="location">NB</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">27.09.26</div><div class="content"><div class="headline"><span class="title">Landesklassepokal</span><span class="chip lkdo">LKDO</span></div><div class="meta">?</div></div></article>
+<div class="month" data-month="10">Oktober 2026</div>
+<article class="item" data-group="vld"><div class="date">03.10.26</div><div class="content"><div class="headline"><span class="title">Spieltag 2</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Rostock, Danziger Straße</span>
+<span class="team-flow">(1) SV Hafen Rostock · (3) SV Warnemünde 3</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">03.10.26</div><div class="content"><div class="headline"><span class="title">Spieltag 2</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">TSV Grün-Weiß Rostock</span>
+<span class="team-flow">TSV Grün-Weiß Rostock · VC Greifswald 2</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">03.10.26</div><div class="content"><div class="headline"><span class="title">Spieltag 2</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">Malchin</span>
+<span class="scn-flow">(2) TSV Malchin 1 · (3) SV Blau-Weiß 21 Jarmen</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">03/04.10.26</div><div class="content"><div class="headline"><span class="title">FortunaCup</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">NB</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">03.10.26</div><div class="content"><div class="headline"><span class="title">Stavenhagener SV von 1863</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">JSG NB-AT II – Stavenhagener SV von 1863</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">10.10.26</div><div class="content"><div class="headline"><span class="title">HSV Grimmen 1992 II</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">10:00 Uhr</span>
+<span class="team-flow">HSV Grimmen 1992 II – JSG NB-AT II</span></div></div></article>
+<article class="item" data-group="u16"><div class="date">10.10.26</div><div class="content"><div class="headline"><span class="title">LM 2</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u13"><div class="date">11.10.26</div><div class="content"><div class="headline"><span class="title">LM 2</span><span class="chip u13">U13</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="vld"><div class="date">31.10.26</div><div class="content"><div class="headline"><span class="title">Spieltag 3</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Neubrandenburg, Ost 1</span>
+<span class="team-flow">(1) SV Warnemünde 4 · (2) VC Greifswald 1</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">31.10.26</div><div class="content"><div class="headline"><span class="title">Spieltag 3</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">Ueckermünde</span>
+<span class="scn-flow">(2) SV Einheit Ueckermünde · (3) SV Grün-Weiß Ferdinandshof</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">31.10.26</div><div class="content"><div class="headline"><span class="title">HSV Insel Usedom</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">JSG NB-AT II – HSV Insel Usedom</span></div></div></article>
+<div class="month" data-month="11">November 2026</div>
+<article class="item" data-group="vlh"><div class="date">01.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 3</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">TSV Gägelow</span>
+<span class="team-flow">TSV Gägelow · Güstrower SC 09</span>
+<span class="team-note">verlegt vom 31.10.</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">08.11.26</div><div class="content"><div class="headline"><span class="title">HC Vorpommern-Greifswald</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">12:00 Uhr</span>
+<span class="team-flow">HC Vorpommern-Greifswald – JSG NB-AT II</span></div></div></article>
+<article class="item" data-group="u14"><div class="date">08.11.26</div><div class="content"><div class="headline"><span class="title">LM 2</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="vld"><div class="date">14.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 4</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Greifswald, Sporthalle 4</span>
+<span class="team-flow">(1) VC Greifswald 3 · (3) Bad Doberaner SV 90</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">14.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 4</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">Heimspiel · Albert-Einstein-Gymnasium</span>
+<span class="team-flow">Stralsunder Volley Vikings · HSG Uni Rostock 1</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">14.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 4</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">Neubrandenburg</span>
+<span class="scn-flow">(1) TSV Malchin 2 · (2) HSV Neubrandenburg 2</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">14.11.26</div><div class="content"><div class="headline"><span class="title">Stralsunder HV II</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">JSG NB-AT II – Stralsunder HV II</span></div></div></article>
+<article class="item" data-group="u13"><div class="date">21.11.26</div><div class="content"><div class="headline"><span class="title">LM 3</span><span class="chip u13">U13</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u16"><div class="date">21.11.26</div><div class="content"><div class="headline"><span class="title">LM 3</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="vld"><div class="date">28.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 5</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Neubrandenburg, Ost 1</span>
+<span class="team-flow">(1) 1. VC Stralsund 2 · (2) PSV Neustrelitz</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">28.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 5</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">SKV Müritz</span>
+<span class="team-flow">SKV Müritz · Landesleistungszentrum</span></div></div></article>
+<article class="item" data-group="djm"><div class="date">28.11.26</div><div class="content"><div class="headline"><span class="title">HSV Peenetal Loitz</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">HSV Peenetal Loitz – JSG NB-AT II</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">29.11.26</div><div class="content"><div class="headline"><span class="title">Spieltag 5</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">Jarmen</span>
+<span class="scn-flow">(1) SV Blau-Weiß 21 Jarmen · (3) SV Einheit Ueckermünde</span></div></div></article>
+<div class="month" data-month="12">Dezember 2026</div>
+<article class="item" data-group="vlh"><div class="date">05.12.26</div><div class="content"><div class="headline"><span class="title">Spieltag 6</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">Heimspiel · Albert-Einstein-Gymnasium</span>
+<span class="team-flow">Landesleistungszentrum · HSG Uni Rostock 2</span>
+<span class="team-note">verlegt vom 19.12.</span></div></div></article>
+<article class="item" data-group="u14"><div class="date">05.12.26</div><div class="content"><div class="headline"><span class="title">LM 3</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="lkdo"><div class="date">06.12.26</div><div class="content"><div class="headline"><span class="title">Spieltag 6</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">Neubrandenburg</span>
+<span class="scn-flow">(2) HSV Neubrandenburg 2 · (3) VC Greifswald 7</span></div></div></article>
+<article class="item" data-group="u18"><div class="date">06.12.26</div><div class="content"><div class="headline"><span class="title">LM 2</span><span class="chip u18">U18</span></div><div class="meta"><span class="location">Warnemünde, HST oder Kühlungsborn</span></div></div></article>
+<article class="item" data-group="vld"><div class="date">12.12.26</div><div class="content"><div class="headline"><span class="title">Spieltag 6</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Neustrelitz, Strelitzhalle</span>
+<span class="team-flow">(2) PSV Neustrelitz · (3) VC Greifswald 2</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">12.12.26</div><div class="content"><div class="headline"><span class="title">Spieltag 7</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">ISV Rostock</span>
+<span class="team-flow">ISV Rostock · SV Warnemünde 4</span></div></div></article>
+<article class="item" data-group="vld"><div class="date">19.12.26</div><div class="content"><div class="headline"><span class="title">Spieltag 7</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Stralendorf</span>
+<span class="team-flow">(1) MSV Pampow 2 · (3) HSV Neubrandenburg</span></div></div></article>
+<div class="month" data-month="01">Januar 2027</div>
+<article class="item" data-group="djm"><div class="date">09.01.27</div><div class="content"><div class="headline"><span class="title">Platzhalter Endrundenspiele</span><span class="chip djm">mJD</span></div><div class="meta"><span class="location">JSG NB-AT II – Platzhalter Endrundenspiele</span></div></div></article>
+<article class="item" data-group="u14"><div class="date">09.01.27</div><div class="content"><div class="headline"><span class="title">LM 4</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u18"><div class="date">10.01.27</div><div class="content"><div class="headline"><span class="title">LM 3</span><span class="chip u18">U18</span></div><div class="meta"><span class="location">Greifswald, Malchin oder Warnemünde</span></div></div></article>
+<article class="item" data-group="vld"><div class="date">16.01.27</div><div class="content"><div class="headline"><span class="title">Spieltag 8</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Neubrandenburg, Ost 1</span>
+<span class="team-flow">(1) SV Warnemünde 3 · (2) VC Greifswald 3</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">16.01.27</div><div class="content"><div class="headline"><span class="title">Spieltag 8</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">Stralsunder Volley Vikings</span>
+<span class="team-flow">Stralsunder Volley Vikings · VC Greifswald 2</span></div></div></article>
+<article class="item" data-group="vld"><div class="date">23.01.27</div><div class="content"><div class="headline"><span class="title">Spieltag 9</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Greifswald, Ernst-Moritz-Arndt</span>
+<span class="team-flow">(2) VC Greifswald 1 · (3) SV Hafen Rostock</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">23.01.27</div><div class="content"><div class="headline"><span class="title">Spieltag 9</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">Heimspiel · Sportanlage Datzeberg</span>
+<span class="team-flow">TSV Grün-Weiß Rostock · TSV Gägelow</span></div></div></article>
+<article class="item" data-group="u13"><div class="date">30.01.27</div><div class="content"><div class="headline"><span class="title">LM 4</span><span class="chip u13">U13</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u16"><div class="date">30.01.27</div><div class="content"><div class="headline"><span class="title">LM Finale</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+<div class="month" data-month="02">Februar 2027</div>
+<article class="item" data-group="vld"><div class="date">06.02.27</div><div class="content"><div class="headline"><span class="title">Spieltag 10</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Bad Doberan</span>
+<span class="team-flow">(1) Bad Doberaner SV 90 · (3) SV Warnemünde 4</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">27.02.27</div><div class="content"><div class="headline"><span class="title">Spieltag 10</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">Güstrower SC 09</span>
+<span class="team-flow">Güstrower SC 09 · HSG Uni Rostock 1</span>
+<span class="team-note">verlegt vom 06.02.</span></div></div></article>
+<article class="item" data-group="u13"><div class="date">27.02.27</div><div class="content"><div class="headline"><span class="title">LM 5</span><span class="chip u13">U13</span></div><div class="meta">?</div></div></article>
+<div class="month" data-month="03">März 2027</div>
+<article class="item" data-group="djm"><div class="date">06.03.27</div><div class="content"><div class="headline"><span class="title">Platzhalter Endrundenspiele</span><span class="chip djm">mJD</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u14"><div class="date">06.03.27</div><div class="content"><div class="headline"><span class="title">LM Finale</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u18"><div class="date">06.03.27</div><div class="content"><div class="headline"><span class="title">LM Finale</span><span class="chip u18">U18</span></div><div class="meta"><span class="location">Malchin, Boltenhagen oder Warnemünde</span></div></div></article>
+<article class="item" data-group="vld"><div class="date">20.03.27</div><div class="content"><div class="headline"><span class="title">Spieltag 11</span><span class="chip vld">VLD</span></div><div class="meta"><span class="location">10:00 · Ort offen</span>
+<span class="team-flow">(5) VC Greifswald 2 · (6) 1. VC Stralsund 2</span></div></div></article>
+<article class="item" data-group="vlh"><div class="date">20.03.27</div><div class="content"><div class="headline"><span class="title">Abschlussspieltag</span><span class="chip vlh">VLH</span></div><div class="meta"><span class="location">Rostock</span>
+<span class="team-flow">HSG Uni Rostock 2 · SKV Müritz</span></div></div></article>
+<article class="item" data-group="lkdo"><div class="date">20.03.27</div><div class="content"><div class="headline"><span class="title">Spieltag 8</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">Neubrandenburg</span>
+<span class="scn-flow">(1) TSV Malchin 1 · (2) SV Grün-Weiß Ferdinandshof</span></div></div></article>
+<article class="item" data-group="u16"><div class="date">20/21.03.27</div><div class="content"><div class="headline"><span class="title">NDM</span><span class="chip u16">U16</span></div><div class="meta"><span class="location">MV</span></div></div></article>
+<article class="item" data-group="u16"><div class="date">20.03.27</div><div class="content"><div class="headline"><span class="title">PO 1</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+<div class="month" data-month="04">April 2027</div>
+<article class="item" data-group="djm"><div class="date">10.04.27</div><div class="content"><div class="headline"><span class="title">Platzhalter Endrundenspiele</span><span class="chip djm">mJD</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u14"><div class="date">10/11.04.27</div><div class="content"><div class="headline"><span class="title">NDM</span><span class="chip u14">U14</span></div><div class="meta"><span class="location">MV</span></div></div></article>
+<article class="item" data-group="u14"><div class="date">10.04.27</div><div class="content"><div class="headline"><span class="title">PO 1</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u18"><div class="date">10/11.04.27</div><div class="content"><div class="headline"><span class="title">NDM</span><span class="chip u18">U18</span></div><div class="meta"><span class="location">SH</span></div></div></article>
+<article class="item" data-group="u18"><div class="date">10.04.27</div><div class="content"><div class="headline"><span class="title">PO 2</span><span class="chip u18">U18</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u13"><div class="date">17.04.27</div><div class="content"><div class="headline"><span class="title">LM Finale</span><span class="chip u13">U13</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u16"><div class="date">17.04.27</div><div class="content"><div class="headline"><span class="title">PO 2</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="lkdo"><div class="date">24.04.27</div><div class="content"><div class="headline"><span class="title">Spieltag 9</span><span class="chip lkdo">LKDO</span></div><div class="meta"><span class="location">?</span>
+<span class="scn-flow">(1) TSV Malchin 2 · (6) VC Greifswald 7</span></div></div></article>
+<article class="item" data-group="u14"><div class="date">24.04.27</div><div class="content"><div class="headline"><span class="title">PO 2</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u16"><div class="date">24/25.04.27</div><div class="content"><div class="headline"><span class="title">DM</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+<div class="month" data-month="05">Mai 2027</div>
+<article class="item" data-group="djm"><div class="date">01.05.27</div><div class="content"><div class="headline"><span class="title">Platzhalter Endrundenspiele</span><span class="chip djm">mJD</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u18"><div class="date">01/02.05.27</div><div class="content"><div class="headline"><span class="title">DM</span><span class="chip u18">U18</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u18"><div class="date">02.05.27</div><div class="content"><div class="headline"><span class="title">PO Finale</span><span class="chip u18">U18</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u14"><div class="date">08/09.05.27</div><div class="content"><div class="headline"><span class="title">DM</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u14"><div class="date">08.05.27</div><div class="content"><div class="headline"><span class="title">PO Finale</span><span class="chip u14">U14</span></div><div class="meta">?</div></div></article>
+<article class="item" data-group="u13"><div class="date">22/23.05.27</div><div class="content"><div class="headline"><span class="title">NDM</span><span class="chip u13">U13</span></div><div class="meta"><span class="location">SH</span></div></div></article>
+<article class="item" data-group="u16"><div class="date">22.05.27</div><div class="content"><div class="headline"><span class="title">PO Finale</span><span class="chip u16">U16</span></div><div class="meta">?</div></div></article>
+</section>
+</main>
+<script>
+(function () {
+  function ready(fn) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn);
+    } else {
+      fn();
+    }
+  }
+
+  ready(function () {
+    var filters = document.querySelectorAll("input[data-filter]");
+    var viewButtons = document.querySelectorAll("[data-view-target]");
+    var listView = document.querySelector(".list-view");
+    var schedule = document.querySelector(".schedule");
+
+    function text(el) {
+      return el ? el.textContent.replace(/\s+/g, " ").trim() : "";
+    }
+
+    function firstDateValue(dateText) {
+      var m;
+      dateText = (dateText || "").trim();
+
+      m = dateText.match(/^(\d{2})\.(\d{2})\/(\d{2})\.(\d{2})\.(\d{2})/);
+      if (m) return "20" + m[5] + "-" + m[2] + "-" + m[1];
+
+      m = dateText.match(/^(\d{2})\/(\d{2})\.(\d{2})\.(\d{2})/);
+      if (m) return "20" + m[4] + "-" + m[3] + "-" + m[1];
+
+      m = dateText.match(/^(\d{2})\.(\d{2})\.(\d{2})/);
+      if (m) return "20" + m[3] + "-" + m[2] + "-" + m[1];
+
+      return "9999-12-31";
+    }
+
+    function monthTitle(dateText) {
+      var value = firstDateValue(dateText);
+      var month = value.slice(5, 7);
+      var year = value.slice(0, 4);
+      var names = {
+        "01": "Januar", "02": "Februar", "03": "März", "04": "April",
+        "05": "Mai", "06": "Juni", "07": "Juli", "08": "August",
+        "09": "September", "10": "Oktober", "11": "November", "12": "Dezember"
+      };
+      return (names[month] || month) + " " + year;
+    }
+
+    function groupPriority(group) {
+      var order = {
+        "vld": 10,
+        "vlh": 20,
+        "lkdo": 30,
+        "djm": 40,
+        "mjd": 40,
+        "u13": 50,
+        "u14": 60,
+        "u16": 70,
+        "u18": 80,
+        "u20": 85
+      };
+      return order[group] || 99;
+    }
+
+    function filterChecked(name) {
+      for (var i = 0; i < filters.length; i++) {
+        if (filters[i].getAttribute("data-filter") === name) {
+          return filters[i].checked;
+        }
+      }
+      return true;
+    }
+
+    function buildOverview() {
+      if (!schedule || document.querySelector(".overview-view")) return;
+
+      var sourceItems = schedule.querySelectorAll("article.item[data-group]");
+      var grouped = {};
+      var dates = [];
+
+      for (var i = 0; i < sourceItems.length; i++) {
+        var item = sourceItems[i];
+        var date = text(item.querySelector(".date"));
+        if (!date) continue;
+
+        if (!grouped[date]) {
+          grouped[date] = [];
+          dates.push(date);
+        }
+
+        grouped[date].push({
+          group: item.getAttribute("data-group"),
+          chip: text(item.querySelector(".chip")),
+          title: text(item.querySelector(".title")),
+          meta: item.querySelector(".meta") ? item.querySelector(".meta").innerHTML : "?"
+        });
+      }
+
+      dates.sort(function (a, b) {
+        return firstDateValue(a).localeCompare(firstDateValue(b));
+      });
+
+      var overview = document.createElement("section");
+      overview.className = "overview view overview-view";
+      overview.setAttribute("data-view", "overview");
+      overview.setAttribute("aria-label", "Übersicht nach Spielwochenenden");
+      overview.hidden = true;
+
+      var currentMonth = "";
+
+      for (var d = 0; d < dates.length; d++) {
+        var dateText = dates[d];
+        var month = monthTitle(dateText);
+
+        if (month !== currentMonth) {
+          currentMonth = month;
+          var monthEl = document.createElement("div");
+          monthEl.className = "month";
+          monthEl.setAttribute("data-overview-month", "");
+          monthEl.textContent = month;
+          overview.appendChild(monthEl);
+        }
+
+        var entries = grouped[dateText].sort(function (a, b) {
+          var p = groupPriority(a.group) - groupPriority(b.group);
+          if (p !== 0) return p;
+          return a.title.localeCompare(b.title);
+        });
+
+        var card = document.createElement("article");
+        card.className = "overview-card";
+        card.setAttribute("data-date", dateText);
+
+        var head = document.createElement("div");
+        head.className = "overview-head";
+
+        var dateEl = document.createElement("div");
+        dateEl.className = "overview-date";
+        dateEl.textContent = dateText;
+
+        var countEl = document.createElement("div");
+        countEl.className = "overview-count";
+        countEl.textContent = entries.length === 1 ? "1 Termin" : entries.length + " Termine";
+
+        head.appendChild(dateEl);
+        head.appendChild(countEl);
+        card.appendChild(head);
+
+        var content = document.createElement("div");
+        content.className = "overview-content";
+
+        for (var e = 0; e < entries.length; e++) {
+          var entry = entries[e];
+
+          var block = document.createElement("div");
+          block.className = "overview-block";
+          block.setAttribute("data-group", entry.group);
+
+          var badgeCol = document.createElement("div");
+          var badge = document.createElement("span");
+          badge.className = "overview-badge";
+          badge.textContent = entry.chip || entry.group.toUpperCase();
+          badgeCol.appendChild(badge);
+
+          var body = document.createElement("div");
+          var title = document.createElement("div");
+          title.className = "overview-title";
+          title.textContent = entry.title || "Termin";
+
+          var meta = document.createElement("div");
+          meta.className = "overview-meta";
+          meta.innerHTML = entry.meta || "?";
+
+          body.appendChild(title);
+          body.appendChild(meta);
+          block.appendChild(badgeCol);
+          block.appendChild(body);
+          content.appendChild(block);
+        }
+
+        card.appendChild(content);
+        overview.appendChild(card);
+      }
+
+      schedule.insertAdjacentElement("afterend", overview);
+    }
+
+    function updateFilterStyles() {
+      for (var i = 0; i < filters.length; i++) {
+        var label = filters[i].parentNode;
+        if (!label) continue;
+
+        if (filters[i].checked) {
+          label.className = label.className.replace(/\bis-off\b/g, "").replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+        } else if (label.className.indexOf("is-off") === -1) {
+          label.className += " is-off";
+        }
+      }
+    }
+
+    function updateListMonths() {
+      if (!listView) return;
+
+      var months = listView.querySelectorAll(".month");
+      for (var m = 0; m < months.length; m++) {
+        var nextMonth = months[m + 1];
+        var cursor = months[m].nextElementSibling;
+        var visible = false;
+
+        while (cursor && cursor !== nextMonth) {
+          if (cursor.className && cursor.className.indexOf("item") !== -1 && cursor.style.display !== "none") {
+            visible = true;
+            break;
+          }
+          cursor = cursor.nextElementSibling;
+        }
+
+        months[m].style.display = visible ? "flex" : "none";
+      }
+    }
+
+    function updateOverviewCards() {
+      var overview = document.querySelector(".overview-view");
+      if (!overview) return;
+
+      var cards = overview.querySelectorAll(".overview-card");
+      for (var c = 0; c < cards.length; c++) {
+        var blocks = cards[c].querySelectorAll(".overview-block[data-group]");
+        var visibleCount = 0;
+
+        for (var b = 0; b < blocks.length; b++) {
+          var group = blocks[b].getAttribute("data-group");
+          var visible = filterChecked(group);
+          blocks[b].style.display = visible ? "grid" : "none";
+          if (visible) visibleCount++;
+        }
+
+        cards[c].style.display = visibleCount > 0 ? "block" : "none";
+        var countEl = cards[c].querySelector(".overview-count");
+        if (countEl) {
+          countEl.textContent = visibleCount === 1 ? "1 Termin" : visibleCount + " Termine";
+        }
+      }
+
+      var months = overview.querySelectorAll(".month");
+      for (var m = 0; m < months.length; m++) {
+        var nextMonth = months[m + 1];
+        var cursor = months[m].nextElementSibling;
+        var visibleMonth = false;
+
+        while (cursor && cursor !== nextMonth) {
+          if (cursor.className && cursor.className.indexOf("overview-card") !== -1 && cursor.style.display !== "none") {
+            visibleMonth = true;
+            break;
+          }
+          cursor = cursor.nextElementSibling;
+        }
+
+        months[m].style.display = visibleMonth ? "flex" : "none";
+      }
+    }
+
+    function applyFilters() {
+      updateFilterStyles();
+
+      var listItems = document.querySelectorAll(".list-view .item[data-group]");
+      for (var i = 0; i < listItems.length; i++) {
+        var group = listItems[i].getAttribute("data-group");
+        listItems[i].style.display = filterChecked(group) ? "grid" : "none";
+      }
+
+      updateListMonths();
+      updateOverviewCards();
+    }
+
+    function setView(name) {
+      var views = document.querySelectorAll(".view[data-view]");
+
+      for (var i = 0; i < views.length; i++) {
+        views[i].hidden = views[i].getAttribute("data-view") !== name;
+      }
+
+      for (var b = 0; b < viewButtons.length; b++) {
+        var active = viewButtons[b].getAttribute("data-view-target") === name;
+        if (active) {
+          viewButtons[b].className = viewButtons[b].className.replace(/\bis-active\b/g, "").replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "") + " is-active";
+        } else {
+          viewButtons[b].className = viewButtons[b].className.replace(/\bis-active\b/g, "").replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
+        }
+      }
+
+      applyFilters();
+    }
+
+    buildOverview();
+
+    for (var f = 0; f < filters.length; f++) {
+      filters[f].addEventListener("change", applyFilters);
+    }
+
+    for (var v = 0; v < viewButtons.length; v++) {
+      viewButtons[v].addEventListener("click", function () {
+        setView(this.getAttribute("data-view-target"));
+      });
+    }
+
+    setView("list");
+  });
+}());
+</script>
+</body>
+</html>
