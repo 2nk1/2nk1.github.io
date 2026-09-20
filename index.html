@@ -733,13 +733,26 @@
 
     .overview-block[data-group="u20"] .overview-badge { background: var(--u20); }
     .overview-block[data-group="djm"] .overview-badge { background: var(--djm); }
+
+    /* Hinweis, wenn keine kommenden Termine mehr vorhanden sind */
+    .empty-note {
+      margin: 26px 0;
+      padding: 22px 18px;
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
 </style>
 </head>
 <body>
 <header>
 <div class="header-content">
 <div class="header-slot start">
-<span class="app-title">profil Pilotsystem</span>
+<span class="app-title">profil Pilotsystem</span>
 </div>
 <div class="header-slot center"></div>
 <div class="header-slot end"></div>
@@ -933,6 +946,64 @@
       if (m) return "20" + m[3] + "-" + m[2] + "-" + m[1];
 
       return "9999-12-31";
+    }
+
+    // Letzter Tag eines Termins (bei mehrtägigen Terminen z. B. "29/30.08.26" -> 30.08.26)
+    function lastDateValue(dateText) {
+      var m;
+      dateText = (dateText || "").trim();
+
+      m = dateText.match(/^(\d{2})\.(\d{2})\/(\d{2})\.(\d{2})\.(\d{2})/);
+      if (m) return "20" + m[5] + "-" + m[4] + "-" + m[3];
+
+      m = dateText.match(/^(\d{2})\/(\d{2})\.(\d{2})\.(\d{2})/);
+      if (m) return "20" + m[4] + "-" + m[3] + "-" + m[2];
+
+      m = dateText.match(/^(\d{2})\.(\d{2})\.(\d{2})/);
+      if (m) return "20" + m[3] + "-" + m[2] + "-" + m[1];
+
+      return "9999-12-31";
+    }
+
+    // Heutiges Datum (lokale Zeit) als YYYY-MM-DD
+    function todayValue() {
+      var now = new Date();
+      var mm = String(now.getMonth() + 1);
+      var dd = String(now.getDate());
+      if (mm.length < 2) mm = "0" + mm;
+      if (dd.length < 2) dd = "0" + dd;
+      return now.getFullYear() + "-" + mm + "-" + dd;
+    }
+
+    // Entfernt alle Termine, die vollständig in der Vergangenheit liegen.
+    // Der heutige Tag bleibt sichtbar; mehrtägige Termine bleiben bis zum letzten Tag stehen.
+    function removePastItems() {
+      if (!schedule) return;
+
+      var today = todayValue();
+      var items = schedule.querySelectorAll("article.item");
+      for (var i = 0; i < items.length; i++) {
+        var dateText = text(items[i].querySelector(".date"));
+        if (lastDateValue(dateText) < today) {
+          items[i].parentNode.removeChild(items[i]);
+        }
+      }
+
+      // Monatsüberschriften ohne verbleibende Termine entfernen
+      var months = schedule.querySelectorAll(".month");
+      for (var m = 0; m < months.length; m++) {
+        var next = months[m].nextElementSibling;
+        if (!next || next.className.indexOf("item") === -1) {
+          months[m].parentNode.removeChild(months[m]);
+        }
+      }
+
+      if (!schedule.querySelector("article.item")) {
+        var note = document.createElement("div");
+        note.className = "empty-note";
+        note.textContent = "Keine kommenden Termine vorhanden.";
+        schedule.appendChild(note);
+      }
     }
 
     function monthTitle(dateText) {
@@ -1193,6 +1264,7 @@
       applyFilters();
     }
 
+    removePastItems();
     buildOverview();
 
     for (var f = 0; f < filters.length; f++) {
