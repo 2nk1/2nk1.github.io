@@ -1282,37 +1282,17 @@
 }());
 </script>
 <script>
-    // Nutzt die stabile API-URL von GitHub
-    const url = "https://github.com";
-
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("API-Fehler");
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data && data.length > 0) {
-                // Holt das Datum aus der korrekten JSON-Struktur (data[0])
-                const commitDate = new Date(data[0].commit.committer.date);
-                
-                const formattedDate = commitDate.toLocaleDateString('de-DE', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                });
-                
-                document.getElementById('commit-datum').textContent = formattedDate;
-            } else {
-                document.getElementById('commit-datum').textContent = "Keine Commits gefunden";
-            }
-        })
-        .catch(error => {
-            console.error("CORS oder API Fehler:", error);
-            // Fallback: Wenn lokal blockiert, zeigt es zur Sicherheit das heutige Datum
-            const today = new Date().toLocaleDateString('de-DE');
-            document.getElementById('commit-datum').textContent = today + " (Lokal)";
+    fetch("https://github.com")
+        .then(response => response.text())
+        .then(str => {
+            const match = str.match(/<updated>([^<]+)<\/updated>/);
+            const commitDate = new Date(match[1]);
+            
+            document.getElementById('commit-datum').textContent = commitDate.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
         });
 </script>
 </body>
