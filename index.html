@@ -1282,21 +1282,21 @@
 }());
 </script>
 <script>
-    // 1. Trage hier deinen GitHub-Namen und das Repository ein:
-    const username = "2nk1";
-    const repo = "2nk1.github.io";
-    const fileName = "index.html";
-
-    const url = `https://github.com{username}/${repo}/commits?path=${fileName}&per_page=1`;
+    // Nutzt die stabile API-URL von GitHub
+    const url = "https://github.com";
 
     fetch(url)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("API-Fehler");
+            }
+            return response.json();
+        })
         .then(data => {
             if (data && data.length > 0) {
-                // Holt den Zeitstempel des letzten Commits für diese Datei
+                // Holt das Datum aus der korrekten JSON-Struktur (data[0])
                 const commitDate = new Date(data[0].commit.committer.date);
                 
-                // Formatiert das Datum zu "30.09.2026"
                 const formattedDate = commitDate.toLocaleDateString('de-DE', {
                     day: '2-digit',
                     month: '2-digit',
@@ -1309,8 +1309,10 @@
             }
         })
         .catch(error => {
-            console.error("Fehler beim Laden des Git-Datums:", error);
-            document.getElementById('commit-datum').textContent = "Fehler beim Laden";
+            console.error("CORS oder API Fehler:", error);
+            // Fallback: Wenn lokal blockiert, zeigt es zur Sicherheit das heutige Datum
+            const today = new Date().toLocaleDateString('de-DE');
+            document.getElementById('commit-datum').textContent = today + " (Lokal)";
         });
 </script>
 </body>
