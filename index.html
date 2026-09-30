@@ -763,7 +763,7 @@
 <div class="hero-inner">
 <div>
 <h1>Spielplan 2026/27</h1>
-<p class="subtitle">Stand 25.08.2026</p>
+<p class="subtitle">Stand: <span id="commit-datum">Lädt...</span></p>
 <div aria-label="Ansicht" class="view-toggle"><button class="view-button is-active" data-view-target="list" type="button">Liste</button><button class="view-button" data-view-target="overview" type="button">Übersicht</button></div></div>
 <div aria-label="Filter" class="filters"><label class="filter"><input checked="" data-filter="u13" type="checkbox"/><span class="switch u13"></span><span class="filter-text">U13</span></label>
 <label class="filter"><input checked="" data-filter="u14" type="checkbox"/><span class="switch u14"></span><span class="filter-text">U14</span></label>
@@ -1280,6 +1280,38 @@
     setView("list");
   });
 }());
+</script>
+<script>
+    // 1. Trage hier deinen GitHub-Namen und das Repository ein:
+    const username = "2nk1";
+    const repo = "2nk1.github.io";
+    const fileName = "index.html";
+
+    const url = `https://github.com{username}/${repo}/commits?path=${fileName}&per_page=1`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                // Holt den Zeitstempel des letzten Commits für diese Datei
+                const commitDate = new Date(data[0].commit.committer.date);
+                
+                // Formatiert das Datum zu "30.09.2026"
+                const formattedDate = commitDate.toLocaleDateString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+                
+                document.getElementById('commit-datum').textContent = formattedDate;
+            } else {
+                document.getElementById('commit-datum').textContent = "Keine Commits gefunden";
+            }
+        })
+        .catch(error => {
+            console.error("Fehler beim Laden des Git-Datums:", error);
+            document.getElementById('commit-datum').textContent = "Fehler beim Laden";
+        });
 </script>
 </body>
 </html>
